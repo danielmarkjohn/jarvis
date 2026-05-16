@@ -47,3 +47,35 @@ python core_engine.py
 # IF Fails Install NVIDIA Lib
 pip install nvidia-cublas-cu12 nvidia-cudnn-cu12
 
+# Proposed Folder Structure
+jarvis/
+│
+├── venv/                   # (Already exists - Python sandbox)
+├── audio_buffer/           # Temporary holding zone for live microphone chunks
+├── storage/                # The local vault for your project management system
+│
+├── core/                   # The Python intelligence and logic layer
+│   ├── __init__.py         
+│   ├── engine.py           
+│   ├── listener.py         
+│   └── intent_parser.py    
+│
+├── ui/                     # Future home for the Electron/React visualization app
+│
+├── main.py                 
+├── config.py               
+└── requirements.txt
+
+# Troubleshooting Fresh Installs
+winget install Python.Python.3.12 --source winget
+cd "folder"
+py --list
+py -3.12 -m venv venv
+.\venv\Scripts\activate.bat
+pip install -r requirements.txt
+python main.py
+
+
+# Download the Windows installer from ollama.com and install it.
+ollama run llama3
+pip install ollama
