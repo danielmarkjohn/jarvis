@@ -1,0 +1,91 @@
+======================================================================
+                  JARVIS MANUAL TESTING PROMPT SHEET
+======================================================================
+
+CATEGORY 1: WAKE / SLEEP STATE TRANSITIONS
+----------------------------------------------------------------------
+[Expected Behavior: Jarvis should change console states and reply 
+ concisely without running any local system tools.]
+
+1. "Hey Jarvis, are you online?"
+2. "Wake up Jarvis."
+3. "Go to sleep for a bit, standby."
+4. "Mute yourself until I call you."
+5. "Good night, Jarvis."
+
+
+CATEGORY 2: DIRECTORY DISCOVERY & NAVIGATION
+----------------------------------------------------------------------
+[Expected Behavior: Jarvis should trigger 'list_files'. He should 
+ tell you what projects or files exist without listing every 
+ sub-item's raw data unless asked.]
+
+6. "Jarvis, what projects do I have inside my storage?"
+7. "List all the files inside the project0 folder."
+8. "Can you check if there are any text files in my workspace?"
+9. "Show me the contents of my root directory."
+
+
+CATEGORY 3: FILE READ operations (ANALYSIS)
+----------------------------------------------------------------------
+[Expected Behavior: Jarvis triggers 'read_file'. He SHOULD read the 
+ contents internally, summarize or answer your specific question, 
+ and NOT dump the entire raw text into his spoken output.]
+
+10. "Jarvis, read the scratchpad.txt file and tell me the main point."
+11. "Look inside index.js and check if there are any syntax errors."
+12. "What did I write down in the notes.txt file regarding the migration?"
+
+
+CATEGORY 4: FILE WRITE OPERATIONS (LOGGING & CREATION)
+----------------------------------------------------------------------
+[Expected Behavior: Jarvis triggers 'write_file'. The file should 
+ appear instantly in storage0. Jarvis should confirm concisely 
+ without spelling out code block syntaxes.]
+
+13. "Can you log a new text file called todo.txt and put 'Buy milk and complete system architecture design' inside it?"
+14. "Jarvis, log a file named test_script.py and write a simple hello world program in python."
+15. "Create a file named factorial.cpp and write a clean C++ program to find factorials."
+16. "Append a note to logs.txt saying 'System optimization phase one complete'."
+
+
+CATEGORY 5: OS NATIVE APPLICATION EXECUTION
+----------------------------------------------------------------------
+[Expected Behavior: Jarvis triggers 'open_file'. Windows should immediately 
+ pop open the file or folder using your default apps. Jarvis should 
+ say "Opened it, Sir" and NOT read the file's contents out loud.]
+
+17. "Jarvis, open the project0 folder on my screen."
+18. "Open up the factorial.cpp file I just created."
+19. "Launch scratchpad.txt so I can look at it."
+20. "Open all the files inside project0." (Tests chained tool execution)
+
+
+CATEGORY 6: COMPLEX CONTEXT CHAINING
+----------------------------------------------------------------------
+[Expected Behavior: Tests multi-turn or multi-step reasoning using 
+ modular capabilities combined.]
+
+21. "Jarvis, check if todo.txt exists. If it does, open it on my screen."
+22. "Read the contents of notes.txt, copy it, and write it into a new backup file called notes_backup.txt."
+
+
+CATEGORY 7: SECURITY & BOUNDARY TESTS (PATH TRAVERSAL)
+----------------------------------------------------------------------
+[Expected Behavior: Python validation layer should flag an exception. 
+ Jarvis must state that access is denied or that he cannot find the file.]
+
+23. "Jarvis, open the file at ..\..\Windows\System32\drivers\etc\hosts"
+24. "Read a file from C:\Users\Administrator\Desktop\passwords.txt"
+25. "Write a blank file into your parent directory layout using path traversal syntax."
+
+
+CATEGORY 8: SYSTEM TERMINATION
+----------------------------------------------------------------------
+[Expected Behavior: Jarvis clears the current runtime session memory, 
+ speaks a clean goodbye, and closes the terminal execution thread.]
+
+26. "Shut down all systems, Jarvis."
+27. "Power down."
+28. "Terminate session."
+======================================================================

@@ -1,12 +1,20 @@
+import os
+import sys
+
+# Force Python to recognize the root jarvis directory
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+# Your existing imports continue below...
 from core.engine import VoiceEngine
 from core.listener import AudioListener
 from core.speaker import VoiceSynthesizer
 from core.brain import AssistantBrain
-import os
+
 import time
 
 def run_system():
     # 1. Initialize Components
+    # Initialization sequence auto-mounts your modular tool registries under the hood
     engine = VoiceEngine()
     listener = AudioListener()
     speaker = VoiceSynthesizer()
@@ -26,7 +34,7 @@ def run_system():
     # 3. The Continuous Event Loop
     try:
         while True:
-            # Change console prompt based on system state
+            # Console state indicators
             if is_awake:
                 print("\n[ACTIVE] Listening for command...")
             else:
@@ -39,7 +47,7 @@ def run_system():
                 command = text.lower()
                 print(f"[USER] >> {text}")
                 
-                # --- COMMAND TIER 1: The Kill Switch (Always listening) ---
+                # --- COMMAND TIER 1: The Kill Switch ---
                 if any(word in command for word in KILL_WORDS):
                     print("[SYSTEM] Executing shutdown sequence.")
                     speaker.speak("Powering down all systems. Goodbye, Sir.")
@@ -64,17 +72,18 @@ def run_system():
                         print("[SYSTEM] (Audio ignored - System in Standby)")
                     
                     safe_delete(audio_path)
-                    continue # Skip sending audio to the brain
+                    continue # Skip processing turn
                 
                 # --- COMMAND TIER 4: Active Cognitive Processing ---
                 if is_awake:
+                    # brain.think() encapsulates the entire dynamic routing loop seamlessly
                     intelligent_response = brain.think(text)
                     speaker.speak(intelligent_response)
                 
             else:
                 print("[SYSTEM] (Audio discarded - No speech detected)")
                 
-            # Clean up buffer after every loop
+            # Clean up buffer after every execution loop pass
             safe_delete(audio_path)
 
     except KeyboardInterrupt:
@@ -87,7 +96,7 @@ def safe_delete(filepath: str):
         try:
             os.remove(filepath)
         except PermissionError:
-            # If the file is locked, wait a fraction of a second and try one more time
+            # Fallback handling for Windows OS file locks
             time.sleep(0.1)
             try:
                 os.remove(filepath)
