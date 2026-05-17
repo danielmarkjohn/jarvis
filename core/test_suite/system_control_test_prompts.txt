@@ -1,0 +1,62 @@
+======================================================================
+             JARVIS SYSTEM CONTROL & AUTOMATION TEST SHEET
+======================================================================
+
+CATEGORY 1: DYNAMIC WINDOWS REGISTRY MATCHING
+----------------------------------------------------------------------
+[Expected Behavior: Jarvis should trigger 'launch_application'. Python 
+ will query the Winreg key map, find the precise path registered on your 
+ drive, launch it natively, and Jarvis will speak a brief confirmation.]
+
+1. "Jarvis, open Steam on my computer."
+2. "Launch Google Chrome."
+3. "Can you open up Discord for me?"
+4. "Jarvis, launch Spotify."
+
+
+CATEGORY 2: AUTOMATED START MENU SHORTCUT SCANNING (.LNK)
+----------------------------------------------------------------------
+[Expected Behavior: Jarvis triggers 'launch_application'. Python scans 
+ all nested directory tree shortcuts in ProgramData and AppData, 
+ matches the shortcut name, and boots the target using os.startfile.]
+
+5. "Jarvis, open Battle.net."
+6. "Launch Epic Games Launcher."
+7. "Open up EA Desktop."
+8. "Jarvis, open my Riot Games client."
+
+
+CATEGORY 3: GLOBAL RUN COMMAND FALLBACKS
+----------------------------------------------------------------------
+[Expected Behavior: Jarvis triggers 'launch_application'. If registry 
+ and shortcuts both skip hits, it falls back to a blind shell execution 
+ thread, letting Windows pick up native system utility binaries.]
+
+9. "Jarvis, open Notepad."
+10. "Launch the Calculator."
+11. "Open Task Manager right now."
+12. "Jarvis, open Command Prompt."
+13. "Open Windows Explorer."
+
+
+CATEGORY 4: COMPLEX SEQUENTIAL APP CHAINS
+----------------------------------------------------------------------
+[Expected Behavior: Tests Llama 3.1's ability to trigger multiple 
+ tool calls back-to-back in a single response pass based on user speech.]
+
+14. "Jarvis, open Steam and launch Battle.net simultaneously."
+15. "I'm about to work, open Discord and open Google Chrome for me."
+16. "Jarvis, launch Notepad, Calculator, and Task Manager together."
+
+
+CATEGORY 5: NATIVE HARDWARE POWER OPERATIONS
+----------------------------------------------------------------------
+[Expected Behavior: Jarvis should execute 'manage_power_state' using 
+ the exact matching enum value ('shutdown', 'restart', 'sleep'). 
+ Windows shell binaries will execute instantly.]
+
+17. "Jarvis, put the computer to sleep."
+18. "Reboot the system, please."
+19. "Initialize system standby." (Tests if model maps standby -> sleep)
+20. "Jarvis, go ahead and shut down the PC."
+======================================================================

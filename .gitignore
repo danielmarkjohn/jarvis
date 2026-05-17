@@ -10,3 +10,4 @@ __pycache__/config.cpython-312.pyc
 audio_buffer/temp_chunk.wav
 core/__pycache__/brain.cpython-312.pyc
 core/__pycache__/listener.cpython-312.pyc
+core/tools/__pycache__/__init__.cpython-312.pyc
