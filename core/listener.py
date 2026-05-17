@@ -1,33 +1,36 @@
 import speech_recognition as sr
 import os
-from config import AUDIO_BUFFER_DIR
+from config import AUDIO_BUFFER_DIR, MIC_PAUSE_THRESHOLD, MIC_ENERGY_THRESHOLD
 
 class AudioListener:
     def __init__(self):
         self.recognizer = sr.Recognizer()
         self.microphone = sr.Microphone()
         
-        # Optimize threshold settings for faster cut-off
-        self.recognizer.pause_threshold = 0.8 # Seconds of silence before cutting the recording
+        # --- THE TIMING & TRIGGER FIX ---
+        self.recognizer.pause_threshold = MIC_PAUSE_THRESHOLD
+        self.recognizer.energy_threshold = MIC_ENERGY_THRESHOLD
         
-        print("[SYSTEM] Calibrating microphone to ambient noise floor...")
+        # CRITICAL: Turn off dynamic adjustment so it stops picking up AC/fans/keyboard clicks
+        self.recognizer.dynamic_energy_threshold = False 
+        
+        print("[SYSTEM] Calibrating microphone (Dynamic Sensitivity OFF)...")
         with self.microphone as source:
-            self.recognizer.adjust_for_ambient_noise(source, duration=2)
-        print("[SYSTEM] Microphone calibrated.")
+            self.recognizer.adjust_for_ambient_noise(source, duration=1)
+        print("[SYSTEM] Microphone locked and calibrated.")
 
     def listen_and_record(self) -> str:
-        """Listens continuously until speech is detected, saves it, and returns the filepath."""
         temp_file_path = os.path.join(AUDIO_BUFFER_DIR, "temp_chunk.wav")
-        
         with self.microphone as source:
             print("\n[LISTENING] ...")
-            # This will block/wait indefinitely until it hears a voice
-            audio_data = self.recognizer.listen(source)
-            
-            print("[PROCESSING] Voice detected, handing off to GPU...")
-            
-            # Save the captured audio block to the buffer
-            with open(temp_file_path, "wb") as f:
-                f.write(audio_data.get_wav_data())
+            try:
+                # Add a timeout so it doesn't get stuck listening to static forever
+                audio_data = self.recognizer.listen(source, timeout=None, phrase_time_limit=15)
                 
-        return temp_file_path
+                print("[PROCESSING] Voice detected, handing off to GPU...")
+                with open(temp_file_path, "wb") as f:
+                    f.write(audio_data.get_wav_data())
+                return temp_file_path
+            
+            except sr.WaitTimeoutError:
+                return None

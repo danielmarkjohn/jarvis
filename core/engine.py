@@ -1,9 +1,7 @@
 import os
 import sys
-import time
 from config import MODEL_SIZE, DEVICE, COMPUTE_TYPE
 
-# BRUTE FORCE CUDA PATH INJECTION
 site_packages = os.path.join(sys.prefix, "Lib", "site-packages")
 cublas_bin = os.path.join(site_packages, "nvidia", "cublas", "bin")
 cudnn_bin = os.path.join(site_packages, "nvidia", "cudnn", "bin")
@@ -18,9 +16,28 @@ class VoiceEngine:
         print("[SYSTEM] VRAM populated. Engine is hot.")
 
     def transcribe(self, audio_path: str) -> str:
-        """Processes the audio chunk and returns the transcribed text."""
-        segments, info = self.model.transcribe(audio_path, beam_size=5)
+        if not audio_path or not os.path.exists(audio_path):
+            return ""
+
+        # vad_filter=True automatically drops dead silence and static
+        segments_generator, info = self.model.transcribe(audio_path, beam_size=5, vad_filter=True)
         
-        # Combine all segments into a single string
-        transcription = "".join([segment.text for segment in segments])
-        return transcription.strip()
+        # Convert the generator into a list so we can actually read the text
+        segments = list(segments_generator)
+        
+        # If the VAD filter stripped everything out, return empty
+        if not segments:
+            return ""
+            
+        transcription = "".join([segment.text for segment in segments]).strip()
+        
+        # The Hallucination Blacklist: Filter out phantom text caused by mic static
+        hallucinations = [
+            "Thank you.", "Thank you", "You", ".", "Subscribe.", 
+            "Amara.org", "Thank you for watching.", "Thanks for watching!"
+        ]
+        
+        if transcription in hallucinations or len(transcription) < 2:
+            return ""
+            
+        return transcription

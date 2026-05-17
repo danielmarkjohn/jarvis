@@ -7,3 +7,6 @@ core/__pycache__/engine.cpython-312.pyc
 .gitignore
 core/__pycache__/speaker.cpython-312.pyc
 __pycache__/config.cpython-312.pyc
+audio_buffer/temp_chunk.wav
+core/__pycache__/brain.cpython-312.pyc
+core/__pycache__/listener.cpython-312.pyc

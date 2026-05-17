@@ -6,12 +6,12 @@ class AssistantBrain:
         print(f"[SYSTEM] Booting Cognitive Engine ({LLM_MODEL})...")
         self.model = LLM_MODEL
         self.system_prompt = SYSTEM_PROMPT
-        print("[SYSTEM] Cognitive Engine is online.")
+        print("[SYSTEM] Cognitive Engine sequence is online.")
 
     def think(self, user_input: str) -> str:
         """Sends transcribed text to Llama 3 and returns the response."""
         try:
-            print("[PROCESSING] Consulting LLM...")
+            print("[PROCESSING] Thinking...")
             response = ollama.chat(model=self.model, messages=[
                 {'role': 'system', 'content': self.system_prompt},
                 {'role': 'user', 'content': user_input}
